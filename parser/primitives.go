@@ -87,8 +87,8 @@ func extractPrimitive(data []byte, offset int, argType string) (interface{}, int
 					//  0  |     1    |    1    |0^1=1|
 					//  1  |     0    |    1    |1^0=1|
 					//  1  |     1    |    0    |1^1=0|
-					// as you can see if sign is one bit gets negated,
-					// and if sign is zero it gets untouched
+					// as you can see if sign is one, bit gets negated,
+					// and if sign is zero, it gets untouched
 					bigInt.SetBit(bigInt, i*8+j, uint(((b[i]&(0b1<<j))>>j)^sign))
 				}
 			}
