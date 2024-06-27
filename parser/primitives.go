@@ -10,7 +10,6 @@ import (
 
 func extractPrimitive(data []byte, offset int, argType string) (interface{}, int) {
 	switch argType {
-	//TODO: add case for vec, object
 	case "u128":
 		if len(data[offset:]) < 16 {
 			return nil, 16
@@ -54,7 +53,7 @@ func extractPrimitive(data []byte, offset int, argType string) (interface{}, int
 		// https://en.wikipedia.org/wiki/Sign_bit#Sign_bit_weight_in_Two's_Complement
 		// so if the number is negative all bits should be reversed
 		// and later we should add one and then negate the whole thing
-		// lets say we have 1001 to get the number we should
+		// lets say we have 1001, to get the number we should
 		// - check the most significant bit
 		// - if it is 0 then procceed like a regular binary number
 		// - if it is 1:
@@ -80,7 +79,7 @@ func extractPrimitive(data []byte, offset int, argType string) (interface{}, int
 			for i := 0; i < 16; i++ {
 				for j := 0; j < 8; j++ {
 
-					// here we take last bit and do xor with sign
+					// here we take j-th bit and do xor with sign
 					// so if sign is 1 it means that number is negative
 					// and if number is negative we should negate all the bits
 					// sign|bit before|bit after| xor |
