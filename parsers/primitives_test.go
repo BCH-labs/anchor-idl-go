@@ -1,1 +1,0 @@
-package anchor_idl
