@@ -67,5 +67,5 @@ func TestBoxedValue(t *testing.T) {
 	offset := 8
 
 	boxed, _ := extractPrimitive(data, offset, "u8")
-	assert.Equal(t, 30, boxed)
+	assert.Equal(t, uint8(30), boxed)
 }

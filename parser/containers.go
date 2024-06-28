@@ -23,8 +23,11 @@ func extractArray(data []byte, types []interface{}, offset int, argType interfac
 	res := make([]string, 0)
 
 	typeData := argType.([]interface{})
-	// idk why but it says that it should be float64
-	len := int(typeData[1].(float64))
+	len, ok := typeData[1].(int)
+	if !ok {
+		// idk why but it says that it should be float64 when parsing array inside an object
+		len = int(typeData[1].(float64))
+	}
 
 	var n int = 0
 	for i := 0; i < len; i++ {

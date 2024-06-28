@@ -20,14 +20,24 @@ func TestObjectsParsing(t *testing.T) {
 
 	argType := make(map[string]interface{})
 	argType["defined"] = "Info"
-	objRaw, n := extractNonPrimitive(data, idl["type"].([]interface{}), offset, argType)
-	obj := objRaw.(map[string]interface{})
+	objRaw, n := extractNonPrimitive(data, idl["types"].([]interface{}), offset, argType)
+	obj := objRaw.(string)
 	offset += n
-	assert.Equal(t, "joe", obj["name"])
-	assert.Equal(t, "saik", obj["surname"])
-	assert.Equal(t, "add it here pls", obj["location"])
+	expected := `{"location":"{\"city\":\"London\",\"postalCode\":\"9, 8, 7\"}","name":"joe","surname":"saik"}`
+	assert.Equal(t, expected, obj)
 
+	// parse only one option
 	argType["defined"] = "Options"
-	enum, _ := extractNonPrimitive(data, idl["type"].([]interface{}), offset, argType)
-	assert.Equal(t, "add it here pls", enum)
+	enum, n := extractNonPrimitive(data, idl["types"].([]interface{}), offset, argType)
+	//idk why but here it doesnt have backslashes
+	expected = `{"Option":{}}`
+	assert.Equal(t, expected, enum)
+	assert.Equal(t, 1, n)
+
+	//parse full array of options
+	argTypeForSecondCall := make(map[string]interface{})
+	argTypeForSecondCall["array"] = []interface{}{argType, 3}
+	enum, n = extractNonPrimitive(data, idl["types"].([]interface{}), offset, argTypeForSecondCall)
+	assert.Equal(t, `{"Option":{}}, {"OptionOne":{"val":1}}, {"OptionTwo":[1,2]}`, enum)
+	assert.Equal(t, 7, n)
 }

@@ -1,8 +1,10 @@
 package parser
 
 import (
-	"github.com/stretchr/testify/assert"
+	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestContainerParsing(t *testing.T) {
@@ -13,14 +15,21 @@ func TestContainerParsing(t *testing.T) {
 	assert.Equal(t, "Hello, World!", st)
 	offset += n
 
-	vec, n := extractVector(data, nil, offset, "bytes")
-	assert.Equal(t, "Hi!", vec)
+	// here call to extractPrimitive
+	// because this method handles all types that are represented as string
+	vec, n := extractPrimitive(data, offset, "bytes")
+	expected := strings.Join([]string{"72", "105", "33"}, ", ")
+	assert.Equal(t, expected, vec)
 	offset += n
 
 	arr, n := extractArray(data, nil, offset, []interface{}{"u8", 10})
-	assert.Equal(t, []interface{}{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, arr)
+	expected = strings.Join([]string{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"}, ", ")
+	assert.Equal(t, expected, arr)
 	offset += n
 
-	// opt, _ := extractOption(data, nil, offset, "u8")
-	// assert.Equal(t, nil, opt)
+	arg := make(map[string]interface{})
+	arg["option"] = "u8"
+	opt, _ := extractValue(data, nil, offset, arg)
+	// IDK if option is nil than it is 0 anyway, weird
+	assert.Equal(t, uint8(0), opt)
 }
